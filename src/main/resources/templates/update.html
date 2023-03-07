@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 수정</title>
+    <style>
+        .titlayer {
+            width: 650px;
+            margin: 0 auto;
+            margin-top: 50px;
+        }
+        .titlayer table {
+            width: 100%;
+            border-top: 1px solid #444444;
+            border-collapse: collapse;
+            text-align: center;
+        }
+        .tablayer {
+            width: 650px;
+            margin: 0 auto;
+            margin-top: 10px;
+        }
+        .tablayer table {
+            margin-top: 30px;
+            width: 100%;
+            border-top: 1px solid #444444;
+            border-collapse: collapse;
+            align: center;
+        }
+        .tablayer th, td {
+            border-bottom: 1px solid #444444;
+            padding: 5px;
+        }
+        .tablayer th {
+            width : 18%;
+            text-align: right;
+        }
+        .tablayer input {
+            width: 100%;
+            height: 30px;
+            box-sizing: border-box;
+            font-family: Ebrima, 맑은고딕, Tahoma, Vernada ;
+            font-size: 11pt;
+        }
+        .tablayer textarea {
+            width: 100%;
+            min-height:350px;
+            box-sizing: border-box;
+            font-family: Ebrima, 맑은고딕, Tahoma, Vernada ;
+            font-size: 11pt;
+        }
+        .btnlayer {
+            width: 650px;
+            margin: 0 auto;
+            margin-top: 10px;
+            text-align: right;
+            padding-right: 10px;
+        }
+        .btnlayer input {
+            width: 70px;
+            height: 30px;
+            box-sizing: border-box;
+            font-family: Tahoma, 맑은 고딕, Vernada ;
+            font-size: 10pt;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<form action="/board/update" method="post" name="updateForm">
+    <div class="titlayer">
+        <table>
+            <tr>
+                <td><h2>게시글 수정</h2></td>
+            </tr>
+        </table>
+
+    </div>
+    <div class="tablayer">
+        <input type="hidden" name="id" th:value="${updateBoard.id}">
+        <input type="hidden" name="boardHits" th:value="${updateBoard.boardHits}">
+        <table>
+            <tr>
+                <th>글 제목 |</th>
+                <td><input type="text" name="boardTitle" th:value="${updateBoard.boardTitle}"></td>
+            </tr>
+            <tr>
+                <th>닉네임 |</th>
+                <td><input type="text" name="boardWriter" th:value="${updateBoard.boardWriter}"></td>
+            </tr>
+            <tr>
+                <th>비밀번호 |</th>
+                <td><input type="password" name="boardPass" id="boardPass"></td>
+            </tr>
+            <tr>
+                <th>글 내용 |</th>
+                <td><textarea name="boardContents" th:text="${updateBoard.boardContents}"></textarea></td>
+            </tr>
+        </table>
+    </div>
+    <div class="btnlayer">
+        <button onclick="listReq();">목록</button>
+        <button onclick="detailReq();">뒤로</button>
+        <input type="submit" value="저장" onclick="boardUpdate();">
+    </div>
+</form>
+</body>
+<script th:inline="javascript">
+    const boardUpdate = () => {
+        // 기존에 입력한 비밀번호
+        const pass = [[${updateBoard.boardPass}]];
+        // 수정후 다시 입력한 비밀번호
+        const inputPass = document.getElementById("boardPass").value;
+        if(pass == inputPass) {
+            document.updateForm.submit();
+        } else {
+            alert("비밀번호가 일치하지 않습니다.");
+        }
+    }
+    const detailReq = () => {
+        const id = [[${updateBoard.id}]];
+console.log("id=", id);
+        //location.href = "/board/" + id;
+        location.href="@{|/board/${updateBoard.id}|}";
+    }
+    const listReq = () => {
+        console.log("목록 요청");
+        location.href = "/board/";
+    }
+</script>
+</html>

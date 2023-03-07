@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Paging</title>
+</head>
+<style>
+        .titlayer {
+            width: 650px;
+            margin: 0 auto;
+            margin-top: 50px;
+        }
+        .titlayer table {
+            width: 100%;
+            border-top: 1px solid #444444;
+            border-collapse: collapse;
+            text-align: center;
+        }
+        .tablayer {
+            table-layout: fixed;
+            width: 650px;
+            margin: 0 auto;
+            margin-top: 10px;
+        }
+        .tablayer table {
+            margin-top: 30px;
+            width: 100%;
+            border-top: 1px solid #444444;
+            border-collapse: collapse;
+            align: center;
+            font-size: 10pt;
+        }
+        .tablayer th, td {
+            border-bottom: 1px solid #444444;
+            padding: 5px;
+            font-family: 'Malgun Gothic', Tahoma, Vernada ;
+            font-size:10.5pt;
+        }
+        .btnlayer {
+            width: 650px;
+            margin: 0 auto;
+            margin-top: 10px;
+            text-align: right;
+        }
+        .btnlayer input {
+            width: 70px;
+            height: 30px;
+            box-sizing: border-box;
+            font-family: 'Malgun Gothic', Tahoma, Vernada ;
+            font-size: 10pt;
+            font-weight: bold;
+        }
+        .pagelayer {
+            width: 650px;
+            margin: 0 auto;
+            margin-top: 20px;
+            text-align: center;
+            font-family: 'Malgun Gothic', Tahoma, Vernada ;
+        }
+    </style>
+<body>
+<div class="titlayer">
+  <table>
+    <tr>
+      <td><h2>게시글 목록</h2></td>
+    </tr>
+  </table>
+</div>
+<div class="tablayer">
+  <table>
+    <tr style="background-color:CadetBlue; color:white; text-align:center;">
+      <th style="text-align:right; padding-right:10px; width:8%;">| id</th>
+      <th style="text-align:left; width:42%;">| 글제목</th>
+      <th style="text-align:left; width:20%;">| 닉네임</th>
+      <th style="text-align:center; width:17%;">| 작성일</th>
+      <th style="text-align:right; padding-right:15px; width:13%;">| 조회수</th>
+    </tr>
+    <tr style="text-align:center;" th:each="board : ${boardList}">
+      <td style="text-align:right; padding-right:10px; width:8%;" th:text="${board.id}"></td>
+      <td style="text-align:left; padding-left:10px; width:42%;">
+          <!-- page 인덱스는 0부터 시작하기 때문에 사용자가 위치한 현재 page는 boardList.number + 1이 됨 -->
+          <a th:href="@{|/board/${board.id}|(page=${boardList.number + 1})}" th:text="${board.boardTitle}"></a>
+      </td>
+      <td style="text-align:left; padding-left:10px; width:20%;" th:text="${board.boardWriter}"></td>
+      <td style="text-align:center; width:17%;" th:text="*{#temporals.format(board.boardCreatedTime, 'yyyy-MM-dd')}"></td>
+      <td style="text-align:right; padding-right:15px; width:13%;" th:text="${board.boardHits}"></td>
+    </tr>
+  </table>
+</div>
+<div class="pagelayer">
+    <!-- 첫번째 페이지로 이동 -->
+    <!-- /board/paging?page=1 -->
+    <a th:href="@{/board/paging(page=1)}">First</a>
+    <!-- 이전 Link 활성화 비활성화 -->
+    <!-- boardList.getNumber() 사용자가 위치한 페이지가 2페이지이면 getNumber() = 1 -->
+    <a th:href="${boardList.first} ? '#' : @{/board/paging(page=${boardList.number})}">Prev</a>
+    <!-- 페이지번호 링크(현재 페이지 숫자만)
+         for(int page = startPage; page <= endPage; page++) -->
+    <span th:each="page: ${#numbers.sequence(startPage, endPage)}">
+            <!-- 현재 페이지는 링크없이 숫자만 -->
+        <span th:if="${page == boardList.number + 1}" th:text="${page}"></span>
+        <!-- 현재 페이지가 아닌 다른 페이지번호에는 링크를 보여줌 -->
+        <span th:unless="${page == boardList.number + 1}">
+            <a th:href="@{/board/paging(page=${page})}" th:text="${page}"></a>
+        </span>
+    </span>
+    <!-- 다음 링크 활성화 비활성화 사용자: 2페이지, getNumber: 1, 3페이지 -->
+    <a th:href="${boardList.last} ? '#' : @{/board/paging(page=${boardList.number + 2})}">Next</a>
+    <!-- 마지막 페이지로 이동 -->
+    <a th:href="@{/board/paging(page=${boardList.totalPages})}">Last</a>
+</div>
+<div class="btnlayer">
+  <input type="submit" value="글 작성" onclick="listReq()">
+</div>
+</body>
+<script th:inline="javascript">
+    const listReq = () => {
+        location.href = "/board/save";
+    }
+</script>
+</html>

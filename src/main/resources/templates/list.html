@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>List</title>
+</head>
+<style>
+        .titlayer {
+            width: 650px;
+            margin: 0 auto;
+            margin-top: 50px;
+        }
+        .titlayer table {
+            width: 100%;
+            border-top: 1px solid #444444;
+            border-collapse: collapse;
+            text-align: center;
+        }
+        .tablayer {
+            table-layout: fixed;
+            width: 650px;
+            margin: 0 auto;
+            margin-top: 10px;
+        }
+        .tablayer table {
+            margin-top: 30px;
+            width: 100%;
+            border-top: 1px solid #444444;
+            border-collapse: collapse;
+            align: center;
+            font-size: 10pt;
+        }
+        .tablayer th, td {
+            border-bottom: 1px solid #444444;
+            padding: 5px;
+            font-family: 'Malgun Gothic', Tahoma, Vernada ;
+            font-size:10.5pt;
+        }
+        .btnlayer {
+            width: 650px;
+            margin: 0 auto;
+            margin-top: 10px;
+            text-align: right;
+        }
+        .btnlayer input {
+            width: 70px;
+            height: 30px;
+            box-sizing: border-box;
+            font-family: 'Malgun Gothic', Tahoma, Vernada ;
+            font-size: 10pt;
+            font-weight: bold;
+        }
+    </style>
+<body>
+    <div class="titlayer">
+      <table>
+        <tr>
+          <td><h2>게시글 목록</h2></td>
+        </tr>
+      </table>
+    </div>
+    <div class="tablayer">
+        <table>
+            <tr style="background-color:CadetBlue; color:white; text-align:center;">
+                <th style="text-align:right; padding-right:10px; width:8%;">| id</th>
+                <th style="text-align:left; width:42%;">| 글제목</th>
+                <th style="text-align:left; width:20%;">| 닉네임</th>
+                <th style="text-align:center; width:17%;">| 작성일</th>
+                <th style="text-align:right; padding-right:15px; width:13%;">| 조회수</th>
+            </tr>
+            <tr style="text-align:center;" th:each="board : ${boardList}">
+                <td style="text-align:right; padding-right:10px; width:8%;" th:text="${board.id}"></td>
+                <td style="text-align:left; padding-left:10px; width:42%;"><a th:href="@{|/board/${board.id}|}" th:text="${board.boardTitle}"></a></td>
+                <td style="text-align:left; padding-left:10px; width:20%;" th:text="${board.boardWriter}"></td>
+                <td style="text-align:center; width:17%;" th:text="*{#temporals.format(board.boardCreatedTime, 'yyyy-MM-dd')}"></td>
+                <td style="text-align:right; padding-right:15px; width:13%;" th:text="${board.boardHits}"></td>
+            </tr>
+        </table>
+    </div>
+    <div class="btnlayer">
+      <input type="submit" value="글 작성" onclick="listReq()">
+    </div>
+</body>
+<script th:inline="javascript">
+    const listReq = () => {
+        location.href = "/board/save";
+    }
+</script>
+</html>
